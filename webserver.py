@@ -5,7 +5,6 @@ import machine
 import _thread
 import time
 
-# Nmap scan report for 192.168.1.37
 # MAC Address: 80:7D:3A:3B:EA:0E (Espressif)
 # Wi-Fi credentials (if needed)
 WIFI_SSID = ("XXXX")
