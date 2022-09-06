@@ -19,6 +19,8 @@ pins = [
     Pin(17, Pin.OUT)  # IN4
 ]
 
+led_pin = Pin(25, Pin.OUT)
+
 FULL_STEP_SEQUENCE = [
     [0, 0, 0, 1],
     [0, 0, 1, 0],
@@ -30,17 +32,18 @@ FULL_STEP_SEQUENCE = [
 def change_slice():
     """ spin the required distance to change a slice """
     print('[ STARTING ] change slice')
+    led_pin.value(1)
     for full_step in range(NUM_OF_FULL_STEPS_PER_SLICE):
         for iteration in FULL_STEP_SEQUENCE:
             for pin_num in range(len(pins)):
                 pins[pin_num].value(iteration[pin_num])
                 utime.sleep(WAITING_TIME)
+    led_pin.value(0)
     print('[ DONE ] change slice')
 
 
 # for slice_num in range(NUM_OF_SLICES):
 #     print(f'{slice_num + 1}\'st slice BEGIN')
-#
 
 if __name__ == '__main__':
     change_slice()
