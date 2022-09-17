@@ -7,7 +7,7 @@ WAITING_TIME_BETWEEN_SEQUENCE_CHANGES = 0.001
 NUM_OF_SLICES = 8
 NUMBER_OF_STEPPER_FULL_STEPS_PER_REVOLUTION = 512
 NUM_OF_TEETH_SMALL_WHEEL = 7  # same wheel in the platform, and the cake wheel
-CAKE_HEIGHT_CM = 7
+CAKE_HEIGHT_CM = 7.5
 
 # CAKE WHEEL
 NUM_OF_TEETH_BIG_WHEEL = 70
@@ -65,12 +65,13 @@ def spin_big_cake_wheel_one_slice():
 
 
 def lower_platform():
-    move_platform(1, CAKE_HEIGHT_CM)
+    move_platform(0, CAKE_HEIGHT_CM)
     turn_off_stepper(platform_servo_pins)
 
 
 def raise_platform():
-    move_platform(0, CAKE_HEIGHT_CM)
+    move_platform(1, CAKE_HEIGHT_CM)
+    turn_off_stepper(platform_servo_pins)
 
 
 def move_platform(direction: int, distance_cm: int):
@@ -83,7 +84,7 @@ def move_platform(direction: int, distance_cm: int):
         direction_str = 'down'
         curr_sequence = FULL_STEP_SEQUENCE
     else:
-        raise NameError("WTF R U TRYING TO DO BRUV! it's 0 for up and 1 for down")
+        raise NameError("WTF R U TRYING TO DO BRUV! it's 1 for up and 0 for down")
 
     print(f'[ STARTING ] moving platform {direction_str}')
     led_pin.value(1)
@@ -101,12 +102,9 @@ def move_platform(direction: int, distance_cm: int):
 def change_slice():
     """ full instructions to change a slice """
     lower_platform()
-    sleep(1)
     spin_big_cake_wheel_one_slice()
-    sleep(1)
     raise_platform()
 
 
 if __name__ == '__main__':
     change_slice()
-
