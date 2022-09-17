@@ -108,3 +108,13 @@ def change_slice():
 
 if __name__ == '__main__':
     change_slice()
+
+
+# TODO
+# 12V instead of 5V
+# make sure with dror if he's going to help with wifi
+# to cake
+# fix wifi
+# to sand the plastic parts and make sure it runs smoothly
+# add a minimal functinality to "push a a button" for step change
+# FIX NUMBER OF TEETH IN SMALL WHEEL!!!!!
