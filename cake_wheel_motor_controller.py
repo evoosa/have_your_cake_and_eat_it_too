@@ -7,7 +7,7 @@ WAITING_TIME_BETWEEN_SEQUENCE_CHANGES = 0.001
 NUM_OF_SLICES = 8
 NUMBER_OF_STEPPER_FULL_STEPS_PER_REVOLUTION = 512
 NUM_OF_TEETH_SMALL_WHEEL = 7  # same wheel in the platform, and the cake wheel
-CAKE_HEIGHT_CM = 4
+CAKE_HEIGHT_CM = 7
 
 # CAKE WHEEL
 NUM_OF_TEETH_BIG_WHEEL = 70
@@ -18,16 +18,16 @@ NUMBER_OF_FULL_STEPS_PER_TOOTH = (NUMBER_OF_STEPPER_FULL_STEPS_PER_REVOLUTION /
 NUM_OF_FULL_STEPS_PER_SLICE = NUM_OF_BIG_WHEEL_TEETH_PER_SLICE * NUMBER_OF_FULL_STEPS_PER_TOOTH
 
 # PLATFORM LIFTER
-NUM_OF_FULL_STEPS_PER_CM = 85  # FIXME please improve, should be calculated
+NUM_OF_FULL_STEPS_PER_CM = 53  # FIXME please improve, should be calculated
 
-cake_wheel_pins = [
+cake_wheel_servo_pins = [
     Pin(15, Pin.OUT),  # IN1
     Pin(14, Pin.OUT),  # IN2
     Pin(16, Pin.OUT),  # IN3
     Pin(17, Pin.OUT)  # IN4
 ]
 
-lowering_mechanism_pins = [
+platform_servo_pins = [
     Pin(18, Pin.OUT),  # IN1
     Pin(19, Pin.OUT),  # IN2
     Pin(13, Pin.OUT),  # IN3
@@ -44,21 +44,29 @@ FULL_STEP_SEQUENCE = [
 ]
 
 
+def turn_off_stepper(pins: list):
+    """ reset the stepper pins, turn them off """
+    [pins[pin_idx].value(0) for pin_idx in range(len(pins))]
+    print(f'[ !!! ] turned off stepper motor')
+
+
 def spin_big_cake_wheel_one_slice():
     """ spin the cake wheel the required distance to change a slice """
     print('[ STARTING ] changing slice')
     led_pin.value(1)
     for full_step in range(int(NUM_OF_FULL_STEPS_PER_SLICE)):  # this is not optimal please fix
         for iteration in FULL_STEP_SEQUENCE:
-            for pin_num in range(len(cake_wheel_pins)):
-                cake_wheel_pins[pin_num].value(iteration[pin_num])
+            for pin_num in range(len(cake_wheel_servo_pins)):
+                cake_wheel_servo_pins[pin_num].value(iteration[pin_num])
                 utime.sleep(WAITING_TIME_BETWEEN_SEQUENCE_CHANGES)
     led_pin.value(0)
+    turn_off_stepper(cake_wheel_servo_pins)
     print('[ DONE ] changing slice')
 
 
 def lower_platform():
     move_platform(1, CAKE_HEIGHT_CM)
+    turn_off_stepper(platform_servo_pins)
 
 
 def raise_platform():
@@ -83,8 +91,8 @@ def move_platform(direction: int, distance_cm: int):
         print(f'  - moved {cm_index + 1} centimeters')
         for full_step in range(NUM_OF_FULL_STEPS_PER_CM):
             for iteration in curr_sequence:
-                for pin_num in range(len(lowering_mechanism_pins)):
-                    lowering_mechanism_pins[pin_num].value(iteration[pin_num])
+                for pin_num in range(len(platform_servo_pins)):
+                    platform_servo_pins[pin_num].value(iteration[pin_num])
                     utime.sleep(WAITING_TIME_BETWEEN_SEQUENCE_CHANGES)
     led_pin.value(0)
     print(f'[ DONE ] moving platform {direction_str}')
@@ -93,12 +101,12 @@ def move_platform(direction: int, distance_cm: int):
 def change_slice():
     """ full instructions to change a slice """
     lower_platform()
-    sleep(2)
+    sleep(1)
     spin_big_cake_wheel_one_slice()
-    sleep(2)
+    sleep(1)
     raise_platform()
 
 
 if __name__ == '__main__':
-    raise_platform()
-    lower_platform()
+    change_slice()
+
