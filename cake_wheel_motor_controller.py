@@ -3,18 +3,22 @@ from time import sleep
 import utime
 from machine import Pin
 
-WAITING_TIME = 0.001
+WAITING_TIME_BETWEEN_SEQUENCE_CHANGES = 0.001
 NUM_OF_SLICES = 8
-NUMBER_OF_FULL_STEPS_PER_REVOLUTION = 512
+NUMBER_OF_STEPPER_FULL_STEPS_PER_REVOLUTION = 512
+NUM_OF_TEETH_SMALL_WHEEL = 7  # same wheel in the platform, and the cake wheel
+CAKE_HEIGHT_CM = 4
 
 # CAKE WHEEL
 NUM_OF_TEETH_BIG_WHEEL = 70
-NUM_OF_TEETH_SMALL_WHEEL = 7
 
 NUM_OF_BIG_WHEEL_TEETH_PER_SLICE = (NUM_OF_TEETH_BIG_WHEEL / NUM_OF_SLICES)
-NUMBER_OF_FULL_STEPS_PER_TOOTH = (NUMBER_OF_FULL_STEPS_PER_REVOLUTION /
+NUMBER_OF_FULL_STEPS_PER_TOOTH = (NUMBER_OF_STEPPER_FULL_STEPS_PER_REVOLUTION /
                                   (NUM_OF_TEETH_BIG_WHEEL / NUM_OF_TEETH_SMALL_WHEEL))
 NUM_OF_FULL_STEPS_PER_SLICE = NUM_OF_BIG_WHEEL_TEETH_PER_SLICE * NUMBER_OF_FULL_STEPS_PER_TOOTH
+
+# PLATFORM LIFTER
+NUM_OF_FULL_STEPS_PER_CM = 85  # FIXME please improve, should be calculated
 
 cake_wheel_pins = [
     Pin(15, Pin.OUT),  # IN1
@@ -42,35 +46,59 @@ FULL_STEP_SEQUENCE = [
 
 def spin_big_cake_wheel_one_slice():
     """ spin the cake wheel the required distance to change a slice """
-    print('[ STARTING ] change slice')
+    print('[ STARTING ] changing slice')
     led_pin.value(1)
     for full_step in range(int(NUM_OF_FULL_STEPS_PER_SLICE)):  # this is not optimal please fix
         for iteration in FULL_STEP_SEQUENCE:
             for pin_num in range(len(cake_wheel_pins)):
                 cake_wheel_pins[pin_num].value(iteration[pin_num])
-                utime.sleep(WAITING_TIME)
+                utime.sleep(WAITING_TIME_BETWEEN_SEQUENCE_CHANGES)
     led_pin.value(0)
-    print('[ DONE ] change slice')
+    print('[ DONE ] changing slice')
 
 
-def lower_cake_platform():
-    pass
+def lower_platform():
+    move_platform(1, CAKE_HEIGHT_CM)
 
 
-def raise_cake_platform():
-    pass
+def raise_platform():
+    move_platform(0, CAKE_HEIGHT_CM)
+
+
+def move_platform(direction: int, distance_cm: int):
+    """ move platform in the given direction, the given amount of centimeters """
+    if direction == 0:
+        direction_str = 'up'
+        curr_sequence = FULL_STEP_SEQUENCE.copy()
+        curr_sequence.reverse()
+    elif direction == 1:
+        direction_str = 'down'
+        curr_sequence = FULL_STEP_SEQUENCE
+    else:
+        raise NameError("WTF R U TRYING TO DO BRUV! it's 0 for up and 1 for down")
+
+    print(f'[ STARTING ] moving platform {direction_str}')
+    led_pin.value(1)
+    for cm_index in range(distance_cm):
+        print(f'  - moved {cm_index + 1} centimeters')
+        for full_step in range(NUM_OF_FULL_STEPS_PER_CM):
+            for iteration in curr_sequence:
+                for pin_num in range(len(lowering_mechanism_pins)):
+                    lowering_mechanism_pins[pin_num].value(iteration[pin_num])
+                    utime.sleep(WAITING_TIME_BETWEEN_SEQUENCE_CHANGES)
+    led_pin.value(0)
+    print(f'[ DONE ] moving platform {direction_str}')
 
 
 def change_slice():
-    lower_cake_platform()
+    """ full instructions to change a slice """
+    lower_platform()
     sleep(2)
     spin_big_cake_wheel_one_slice()
     sleep(2)
-    raise_cake_platform()
+    raise_platform()
 
-
-# for slice_num in range(NUM_OF_SLICES):
-#     print(f'{slice_num + 1}\'st slice BEGIN')
 
 if __name__ == '__main__':
-    spin_big_cake_wheel_one_slice()
+    raise_platform()
+    lower_platform()
