@@ -35,6 +35,7 @@ platform_servo_pins = [
 ]
 
 led_pin = Pin(25, Pin.OUT)
+button = Pin(14, Pin.IN, Pin.PULL_DOWN)
 
 FULL_STEP_SEQUENCE = [
     [0, 0, 0, 1],
@@ -107,7 +108,9 @@ def change_slice():
 
 
 if __name__ == '__main__':
-    change_slice()
+    while True:
+        if button.value():
+            change_slice()
 
 
 # TODO
