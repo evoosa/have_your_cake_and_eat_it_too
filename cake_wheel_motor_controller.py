@@ -35,13 +35,13 @@ platform_servo_pins = [
 ]
 
 led_pin = Pin(25, Pin.OUT)
-button = Pin(14, Pin.IN, Pin.PULL_DOWN)
+button = Pin(11, Pin.IN, Pin.PULL_DOWN)
 
 FULL_STEP_SEQUENCE = [
-    [0, 0, 0, 1],
-    [0, 0, 1, 0],
-    [0, 1, 0, 0],
-    [1, 0, 0, 0]
+    [0, 0, 1, 1],
+    [0, 1, 1, 0],
+    [1, 1, 0, 0],
+    [1, 0, 0, 1]
 ]
 
 
@@ -121,3 +121,4 @@ if __name__ == '__main__':
 # to sand the plastic parts and make sure it runs smoothly
 # add a minimal functinality to "push a a button" for step change
 # FIX NUMBER OF TEETH IN SMALL WHEEL!!!!!
+
