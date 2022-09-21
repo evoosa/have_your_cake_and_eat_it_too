@@ -4,11 +4,12 @@ from machine import UART
 import machine
 import _thread
 import time
+from cake_wheel_motor_controller.py import change_slice
 
 # MAC Address: 80:7D:3A:3B:EA:0E (Espressif)
 # Wi-Fi credentials (if needed)
-WIFI_SSID = ("XXXX")
-WIFI_PASSWORD = ("XXXX")
+WIFI_SSID = ("Tsalik")
+WIFI_PASSWORD = ("0503020977")
 PORT = 80
 
 FIRST_TIME_CONNECT_TO_WIFI = False
@@ -121,6 +122,7 @@ def ESP8266Webserver(html_file):
 
         # if the buffer contains IPD(a connection), then respond with HTML handshake
         if '+IPD' in recv_buf:
+            change_slice()
             html_file_lines = _do_html_handshake()
             # After handshake, read in html file from pico and send over serial line by line with CIPSEND
             _send_html_over_serial()
