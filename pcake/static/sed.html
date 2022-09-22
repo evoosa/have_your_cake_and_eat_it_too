@@ -1,0 +1,50 @@
+
+<head>
+    <style>
+.my-table {
+    width:100%;
+    /* text-align: center; */
+    display: table;
+    height: 600px;
+    background-color: rgb(34, 99, 197);
+    color: rgb(211, 180, 157);
+}
+
+body {
+  font-family: Verdana, sans-serif;
+}
+.my-cell {
+    width:100%;
+    /* text-align: center; */
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.large-text {
+    /* text-align: center; */
+    font-size: 300px;
+}
+
+.small-text {
+    /* text-align: center; */
+    font-size: 200px;
+}
+
+ </style>
+ </head>
+ <body>
+ 
+<div class="my-table">  
+<div class="my-cell">
+    <span class="large-text"></span>
+</div> 
+</div>
+<div class="my-cell">
+    <span class="small-text">Take it, it's yours!</span>
+</div>
+<script>
+   setTimeout(function(){
+   window.location.reload(1);
+}, 1000);
+</script>
+</body>
