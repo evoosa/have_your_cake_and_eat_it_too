@@ -1,5 +1,8 @@
 from flask import Flask, send_from_directory, Response
 import datetime
+import os.path
+import os
+import shutil
 # flask --app seducer run --host=0.0.0.0
 
 # TODO:
@@ -8,7 +11,12 @@ import datetime
 # last image at /last_image
 
 eyes_output_path = 'static/lasteyes.txt'
+images_path = 'static/faces'
+known_images_path = 'static/known_faces'
 INTERVAL_TO_SAVE_EYES_IMAGE_SECONDS = 3
+
+if not os.path.isdir(known_images_path):
+    os.makedirs(known_images_path)
 
 app = Flask(__name__,
             static_url_path='', 
@@ -44,3 +52,7 @@ def v0():
     if (datetime.datetime.now() - lasteyes).total_seconds() < INTERVAL_TO_SAVE_EYES_IMAGE_SECONDS:
         return Response(get_file('static/sed.html'), mimetype="text/html")
     return Response(get_file('static/first.html'), mimetype="text/html")
+
+@app.route('/annotate/<image>/<name>')
+def example(image, name):
+    shutil.copyfile(os.path.join(images_path, image), os.path.join(known_images_path, f'{name}.png'))

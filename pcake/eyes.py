@@ -9,7 +9,7 @@ import os
 # %%
 INTERVAL_TO_SAVE_EYES_IMAGE_SECONDS = 100
 eyes_output_path = 'static/lasteyes.txt'
-face_path = 'faces'
+face_path = 'static/faces'
 lasteyes = datetime.datetime.now() - datetime.timedelta(days=1)
 timestamp = lambda: datetime.datetime.now().isoformat().replace(":","_").replace(".", "_")
 
@@ -31,9 +31,6 @@ try:
         _, img = cap.read()
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         faces = face_cascade.detectMultiScale(gray, 1.1, 4)
-        for (x, y, w, h) in faces:
-            cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
-        cv2.imwrite('static/cur.png', img)
         if len(faces) > 0:
             print(f'{timestamp()}: eyes detected')
             with open(eyes_output_path, 'w') as f:
@@ -42,6 +39,10 @@ try:
                 print(f'{timestamp()}: those are new eyes, save to faces')
                 cv2.imwrite(os.path.join(face_path, f'{timestamp()}.png'), img)
                 lasteyes = datetime.datetime.now()
+        
+        for (x, y, w, h) in faces:
+            cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
+        cv2.imwrite('static/cur.png', img)
 finally:
     cap.release()
 
