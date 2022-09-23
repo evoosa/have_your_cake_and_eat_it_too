@@ -5,11 +5,11 @@ import matplotlib.pyplot as plt
 import datetime
 import os.path
 import os
-import face_recognition
 import requests
-import cake
 import serial
 import serial.tools.list_ports
+
+# sudo /home/gumjum/anaconda3/envs/cake/bin/python eyes.py
 
 # %%
 INTERVAL_TO_SAVE_EYES_IMAGE_SECONDS = 100
@@ -45,12 +45,14 @@ print(f'{timestamp()}: dump 100 frames')
 for _ in range(100):
     _, img = cap.read()
 
+face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 print(f'{timestamp()}: start real capture')
 try:
     while True:
         _, img = cap.read()
-        
-        faces = face_recognition.face_locations(img)
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+        # faces = face_recognition.face_locations(img)
         if len(faces) > 0:
             # print(f'{timestamp()}: eyes detected')
             with open(eyes_output_path, 'w') as f:
@@ -74,8 +76,10 @@ try:
                 serial_port.write(b"switch\n")
             cake_status = cur_cake_status
 
-        for (t, l, b, r) in faces:
-            cv2.rectangle(img, (l, t), (r, b), (255, 0, 0), 2)
+        for (x, y, w, h) in faces:
+            cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
+        # for (t, l, b, r) in faces:
+        #     cv2.rectangle(img, (l, t), (r, b), (255, 0, 0), 2)
         cv2.drawMarker(img, cakepixel, (255,0,0) if cake_status else (0, 0, 255))
         # cv2.imshow('image', img)
         # cv2.waitKey(0) 
