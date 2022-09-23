@@ -80,7 +80,7 @@ try:
             cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
         # for (t, l, b, r) in faces:
         #     cv2.rectangle(img, (l, t), (r, b), (255, 0, 0), 2)
-        cv2.drawMarker(img, cakepixel, (255,0,0) if cake_status else (0, 0, 255))
+        cv2.drawMarker(img, cake_algo[:2], (255,0,0) if cake_status else (0, 0, 255))
         # cv2.imshow('image', img)
         # cv2.waitKey(0) 
         cv2.imwrite('static/cur.png', img)
