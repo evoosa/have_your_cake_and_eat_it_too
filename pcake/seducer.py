@@ -1,4 +1,5 @@
-from flask import Flask, send_from_directory, Response, jsonify
+import re
+from flask import Flask, send_from_directory, Response, jsonify, request
 import datetime
 import os.path
 import os
@@ -56,12 +57,14 @@ def v0():
 
 @app.route('/list')
 def list_images():
-    return 'label'
-
-@app.route('/label/faces/<name>')
-def list_images(name):
     return jsonify(list(map(lambda x: x.replace('static/', ''), glob.glob(os.path.join(images_path, '*.png')))))
 
-@app.route('/annotate/<image>/<name>')
-def annotate(image, name):
-    shutil.copyfile(os.path.join(images_path, image), os.path.join(known_images_path, f'{name}.png'))
+@app.route('/label/faces/<name>')
+def get_label(name):
+    return 'label, not implemented yet'
+
+@app.route('/label', methods=['POST', 'GET'])
+def set_label():
+    print(f'annotate {request.form["image"]} as {request.form["name"]}')
+    shutil.copyfile(os.path.join('static', request.form['image']), os.path.join(known_images_path, f'{request.form["name"]}.png'))
+    return 'wiiiippiiii'

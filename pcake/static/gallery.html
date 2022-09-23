@@ -40,13 +40,13 @@ body {
  </head>
  <body>
 
-    <select id="image_list" name="cars" onchange="readURL(this)">
-</select>
 
-<form>
-<input type="text" placeholder="label">
+<form id="label_form">
+<select id="image_list" name="image" onchange="readURL(this)"></select>
+<input type="text" name="name" placeholder="label">
 <input type="submit">
 </form>
+
 <div>
 <img id="blah" src="#" alt="your image" />
 </div>
@@ -65,6 +65,17 @@ body {
     }
 
     $(document).ready(function () {
+
+    $('#label_form').submit(function(e){
+        e.preventDefault();
+        $.ajax({
+            url: '/label',
+            type: 'post',
+            data:$('#label_form').serialize(),
+            success:function(){
+            }
+        });
+    });
 
     $.ajax({
         url : '/list',
