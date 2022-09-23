@@ -15,7 +15,7 @@ import glob
 eyes_output_path = 'static/lasteyes.txt'
 images_path = 'static/faces'
 known_images_path = 'static/known_faces'
-cake_pixel = [66, 466]
+cake_algo = '66, 466, 1, 100'
 INTERVAL_TO_SAVE_EYES_IMAGE_SECONDS = 3
 
 if not os.path.isdir(known_images_path):
@@ -71,15 +71,13 @@ def set_label():
     return 'wiiiippiiii'
 
 
-@app.route('/setcakepixel/<x>/<y>')
-def setcakepixel(x,y):
-    global cake_pixel
-    cake_pixel[0] = int(x)
-    cake_pixel[1] = int(y)
-    return f'cake pixel at {cake_pixel}'
+@app.route('/algo')
+def algo():
+    global cake_algo
+    cake_algo = request.form['algo']
+    return f'good luck with new algo!'
 
-
-@app.route('/getcakepixel')
+@app.route('/getalgo')
 def getcakepixel():
-    global cake_pixel
-    return f'{cake_pixel[0]}, {cake_pixel[1]}'
+    global cake_algo
+    return cake_algo

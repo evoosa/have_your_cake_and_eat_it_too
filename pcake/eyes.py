@@ -62,14 +62,14 @@ try:
                 cv2.imwrite(os.path.join(face_path, f'{timestamp()}.png'), img)
                 lasteyes = datetime.datetime.now()
         
-        cakepixel = list(map(int, requests.get('http://localhost:5000/getcakepixel').text.split(',')))
-        is_it_cake = np.linalg.norm(np.array([255,255,255]) - img[cakepixel[1], cakepixel[0]])
+        cake_algo = list(map(int, requests.get('http://localhost:5000/getalgo').text.split(',')))
+        is_it_cake = np.linalg.norm(np.array([255,255,255]) - img[cake_algo[1], cake_algo[0]])
         ind = (ind + 1) % cake_norms.shape[0]
         cake_norms[ind] = is_it_cake
 
         # last_cake
         if ind % 10 == 0: # check for cake status
-            cur_cake_status = np.mean(cake_norms) < 50
+            cur_cake_status = np.mean(cake_norms) < cake_algo[3]
             print(f'cur cake status {cur_cake_status}')
             if not cur_cake_status and cake_status:
                 print('need to replace cake')
