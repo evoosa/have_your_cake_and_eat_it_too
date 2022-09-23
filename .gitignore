@@ -2,3 +2,4 @@ pcake/faces
 pcake/__pycache__
 *.png
 venv*.pkl
+*.pkl
