@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import datetime
 import os.path
 import os
+import cake
 
 # %%
 INTERVAL_TO_SAVE_EYES_IMAGE_SECONDS = 100
@@ -42,6 +43,10 @@ try:
                 print(f'{timestamp()}: those are new eyes, save to faces')
                 cv2.imwrite(os.path.join(face_path, f'{timestamp()}.png'), img)
                 lasteyes = datetime.datetime.now()
+
+
+
+            # cake.switch()
 finally:
     cap.release()
 
