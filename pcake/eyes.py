@@ -8,6 +8,8 @@ import os
 import face_recognition
 import requests
 import cake
+import serial
+import serial.tools.list_ports
 
 # %%
 INTERVAL_TO_SAVE_EYES_IMAGE_SECONDS = 100
@@ -17,6 +19,16 @@ face_path = 'static/faces'
 lasteyes = datetime.datetime.now() - datetime.timedelta(days=1)
 timestamp = lambda: datetime.datetime.now().isoformat().replace(":","_").replace(".", "_")
 
+
+list_of_ports = list(serial.tools.list_ports.comports())
+print('All ports', list_of_ports)
+
+if not list_of_ports:
+    print('no port is available')
+    exit(0x01)
+
+print(f'try to connect to {list_of_ports[0].name}')
+serial_port = serial.Serial(port=f'/dev/{list_of_ports[0].name}', baudrate=115200, timeout=.1)
 
 ind = 0
 last_cake = datetime.datetime.now()
@@ -59,6 +71,7 @@ try:
             print(f'cur cake status {cur_cake_status}')
             if not cur_cake_status and cake_status:
                 print('need to replace cake')
+                serial_port.write(b"switch\n")
             cake_status = cur_cake_status
 
         for (t, l, b, r) in faces:
