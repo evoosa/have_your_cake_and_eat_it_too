@@ -1,8 +1,9 @@
-from flask import Flask, send_from_directory, Response
+from flask import Flask, send_from_directory, Response, jsonify
 import datetime
 import os.path
 import os
 import shutil
+import glob
 # flask --app seducer run --host=0.0.0.0
 
 # TODO:
@@ -53,6 +54,14 @@ def v0():
         return Response(get_file('static/sed.html'), mimetype="text/html")
     return Response(get_file('static/first.html'), mimetype="text/html")
 
+@app.route('/list')
+def list_images():
+    return 'label'
+
+@app.route('/label/faces/<name>')
+def list_images(name):
+    return jsonify(list(map(lambda x: x.replace('static/', ''), glob.glob(os.path.join(images_path, '*.png')))))
+
 @app.route('/annotate/<image>/<name>')
-def example(image, name):
+def annotate(image, name):
     shutil.copyfile(os.path.join(images_path, image), os.path.join(known_images_path, f'{name}.png'))

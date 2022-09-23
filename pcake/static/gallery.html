@@ -1,0 +1,84 @@
+
+<head>
+    <script src="/jquery-3.6.1.min.js"></script>
+    <style>
+.my-table {
+    width:100%;
+    text-align: center;
+    display: table;
+    height: 500px;
+    background-color: rgb(34, 99, 197);
+    color: rgb(211, 180, 157);
+}
+
+body {
+  font-family: Verdana, sans-serif;
+    text-align: center;
+    vertical-align: middle;
+}
+.my-cell {
+    width:100%;
+    height:500px;
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.large-text {
+    width:100%;
+    text-align: center;
+    /* font-size: min(max(16px, 4vw), 22px); */
+}
+
+.small-text {
+    width:100%;
+    text-align: center;
+    /* font-size: 200px; */
+}
+
+ </style>
+ </head>
+ <body>
+
+    <select id="image_list" name="cars" onchange="readURL(this)">
+</select>
+
+<form>
+<input type="text" placeholder="label">
+<input type="submit">
+</form>
+<div>
+<img id="blah" src="#" alt="your image" />
+</div>
+
+<script>
+    function readURL(input) {
+        var file = $('#image_list').children("option:selected").val();
+        $('#blah').attr('src',file);
+
+
+        $.ajax({
+            url : '/label/' + file,
+            success : function(label) {
+                console.log(label);                
+            }});
+    }
+
+    $(document).ready(function () {
+
+    $.ajax({
+        url : '/list',
+        success : function(list) {
+            console.log(list);
+            
+            for (const element of list) {
+            $('#image_list').append(`<option value="${element}">
+                                       ${element}
+                                  </option>`);
+            }
+        }});
+
+    });
+
+</script>
+</body>
