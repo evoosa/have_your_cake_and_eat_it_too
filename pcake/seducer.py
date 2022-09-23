@@ -15,6 +15,7 @@ import glob
 eyes_output_path = 'static/lasteyes.txt'
 images_path = 'static/faces'
 known_images_path = 'static/known_faces'
+cake_pixel = [66, 466]
 INTERVAL_TO_SAVE_EYES_IMAGE_SECONDS = 3
 
 if not os.path.isdir(known_images_path):
@@ -68,3 +69,17 @@ def set_label():
     print(f'annotate {request.form["image"]} as {request.form["name"]}')
     shutil.copyfile(os.path.join('static', request.form['image']), os.path.join(known_images_path, f'{request.form["name"]}.png'))
     return 'wiiiippiiii'
+
+
+@app.route('/setcakepixel/<x>/<y>')
+def setcakepixel(x,y):
+    global cake_pixel
+    cake_pixel[0] = int(x)
+    cake_pixel[1] = int(y)
+    return f'cake pixel at {cake_pixel}'
+
+
+@app.route('/getcakepixel')
+def getcakepixel():
+    global cake_pixel
+    return f'{cake_pixel[0]}, {cake_pixel[1]}'
