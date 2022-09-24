@@ -15,7 +15,7 @@ import glob
 eyes_output_path = 'static/lasteyes.txt'
 images_path = 'static/faces'
 known_images_path = 'static/known_faces'
-cake_algo = '66, 466, 1, 100'
+cake_algo = '200, 406, 1, 100'
 INTERVAL_TO_SAVE_EYES_IMAGE_SECONDS = 3
 
 if not os.path.isdir(known_images_path):

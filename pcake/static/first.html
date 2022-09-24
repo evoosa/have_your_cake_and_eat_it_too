@@ -7,7 +7,7 @@
     text-align: center;
     display: table;
     height: 500px;
-    background-color: rgb(34, 99, 197);
+    background-color: rgb(175, 20, 93);
     color: rgb(211, 180, 157);
 }
 
@@ -57,8 +57,8 @@ body {
 </audio>
 
 <script>
-    $(document).ready(function () {
-        array = ["Free Cake", "The Cake is a lie", "Have some cake", "It's yours", "Piece of cake!", "Vote for cake!"];
+    function random_statment() {
+        array = ["Free Cake", "The Cake is a lie", "Have some cake", "It's yours", "Piece of cake!", "Vote for cake!", "Cake time"];
         randomElement = array[Math.floor(Math.random() * array.length)];
         document.getElementById('bigt').innerHTML = randomElement;
         $('#bigt').css('fontSize', 3000/randomElement.length);
@@ -67,6 +67,10 @@ body {
         randomElement = array[Math.floor(Math.random() * array.length)];
         document.getElementById('smallt').innerHTML = randomElement;
         $('#smallt').css('fontSize', 3000/randomElement.length);
+    }
+
+    $(document).ready(function () {
+        random_statment();
     });
 
     function run() {
@@ -82,7 +86,7 @@ body {
         }
         xhr.send();
     }
-    setInterval(() => run(), 1000);
+    setInterval(() => random_statment(), 1000);
 
 </script>
 </body>
